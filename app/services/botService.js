@@ -34,7 +34,8 @@ class BotService {
 		console.log(session.message.text);
 		console.log(session.message);
 
-	    session.endDialog("It's %s. YOU WIN!", session.message.text);
+		builder.Prompts.text(session, 'Hi! What is your name?');
+	    // session.endDialog("It's %s. YOU WIN!", session.message.text);
     }
 
 	/**
@@ -43,6 +44,7 @@ class BotService {
 	 */
 	taskDescriptionHandler(session, results) {
 		console.log('!!!!!!!!!!!!!!!!!!', results);
+		session.endDialogWithResult(results);
 	}
 
 }
