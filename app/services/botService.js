@@ -10,11 +10,17 @@ class BotService {
 	    this.bot = new builder.UniversalBot(BotConnector.getConnector());
 
 	    this.bot
+		    .dialog('/', this.defaultHandler);
+
+	    this.bot
 		    .dialog('help', this.taskHandler)
 		    .triggerAction({ matches: /^help/i });
 
+	    this.defaultHandler = this.defaultHandler.bind(this);
 	    this.taskHandler = this.taskHandler.bind(this);
     }
+
+    defaultHandler(session) {}
 
     taskHandler(session, args) {
 	    console.log('ascasc', args);
