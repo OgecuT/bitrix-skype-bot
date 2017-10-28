@@ -27,7 +27,7 @@ class App {
 
     routes() {
 		this.server.post('/api/messages', BotConnector.getConnector().listen());
-		this.server.get('/api/messages', function (req, res) {
+		this.server.get('/', function (req, res) {
 			res.send({success: true});
 		});
     }
