@@ -34,7 +34,6 @@ class BotService {
 		console.log(session.message.text);
 		console.log(session.message);
 
-	    console.log('session', session);
 	    session.endDialog("It's %s. YOU WIN!", session.message.text);
     }
 
