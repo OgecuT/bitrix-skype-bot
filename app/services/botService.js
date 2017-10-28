@@ -13,20 +13,38 @@ class BotService {
 		    .dialog('/', this.defaultHandler);
 
 	    this.bot
-		    .dialog('help', this.taskHandler)
-		    .triggerAction({ matches: /^help/i });
+		    .dialog('#task', [this.taskStartHandler, this.taskDescriptionHandler])
+		    .triggerAction({ matches: /^#task/i });
 
 	    this.defaultHandler = this.defaultHandler.bind(this);
-	    this.taskHandler = this.taskHandler.bind(this);
+	    this.taskStartHandler = this.taskStartHandler.bind(this);
+	    this.taskDescriptionHandler = this.taskDescriptionHandler.bind(this);
     }
 
+	/**
+	 * @param {Session} session
+	 */
     defaultHandler(session) {}
 
-    taskHandler(session, args) {
-	    console.log('ascasc', args);
-	    session.send("I'm a simple echo bot.");
+	/**
+	 * @param {Session} session
+	 */
+	taskStartHandler(session) {
+		// console.log(session.message.user.name);
+		console.log(session.message.text);
+		console.log(session.message);
+
+	    console.log('session', session);
 	    session.endDialog("It's %s. YOU WIN!", session.message.text);
     }
+
+	/**
+	 * @param {Session} session
+	 * @param results
+	 */
+	taskDescriptionHandler(session, results) {
+		console.log('!!!!!!!!!!!!!!!!!!', results);
+	}
 
 }
 

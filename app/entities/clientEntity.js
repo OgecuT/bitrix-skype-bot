@@ -1,6 +1,7 @@
 class ClientEntity {
-    constructor({name, nameAlias, bitrixId}) {
-        this.name = name;
+    constructor({skypeName, bitrixName, nameAlias, bitrixId}) {
+        this.skypeName = skypeName;
+        this.bitrixName = bitrixName;
         this.nameAlias = nameAlias;
         this.bitrixId = bitrixId;
     }

@@ -1,11 +1,16 @@
+/**
+ * @type {Object[]} users
+ */
 const users = [
     {
-        name: 'alex',
+	    skypeName: 'Alexander Zaplitniy',
+        bitrixName: 'Alexander Zaplitniy',
         nameAlias: 'ogecut',
         bitrixId: 6
     },
     {
-        name: 'Dima Sidorenko',
+        skypeName: 'Dima Sidorenko',
+	    bitrixName: 'Alexander Zaplitniy',
         nameAlias: 'dm',
         bitrixId: 1
     }
