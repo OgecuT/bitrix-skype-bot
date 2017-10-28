@@ -10,7 +10,7 @@ class BotService {
 	    this.bot = new builder.UniversalBot(BotConnector.getConnector());
 
 	    this.bot
-		    .dialog('/help', [this.taskHandler])
+		    .dialog('help', this.taskHandler)
 		    .triggerAction({ matches: /^help/i });
 
 	    this.taskHandler = this.taskHandler.bind(this);

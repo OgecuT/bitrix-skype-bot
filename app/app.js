@@ -11,7 +11,7 @@ class App {
 	/**
 	 * @param {number} port
 	 */
-	constructor(port = 5000) {
+	constructor(port) {
         this.port = port;
     }
 
