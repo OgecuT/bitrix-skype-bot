@@ -1,5 +1,4 @@
 const HttpServer = require('./config/httpServer');
-const request = require('request');
 const BotConnector = require('./services/botConnector');
 const BotService = require('./services/botService');
 

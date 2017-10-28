@@ -1,5 +1,7 @@
 const builder = require('botbuilder');
 const BotConnector = require('./botConnector');
+const ClientService = require('./clientService');
+const BitrixTaskService = require('./bitrixTaskService');
 
 /**
  * @class BotService
@@ -7,46 +9,78 @@ const BotConnector = require('./botConnector');
  */
 class BotService {
     constructor() {
+    	this.clients = new ClientService();
+    	this.bitrixTaskService = new BitrixTaskService();
 	    this.bot = new builder.UniversalBot(BotConnector.getConnector());
 
-	    this.bot
-		    .dialog('/', this.defaultHandler);
+	    this.bot.dialog('/', this.defaultHandler.bind(this));
 
 	    this.bot
-		    .dialog('#task', [this.taskStartHandler, this.taskDescriptionHandler])
+		    .dialog('#task', [this.taskStartHandler.bind(this), this.taskDescriptionHandler.bind(this)])
 		    .triggerAction({ matches: /^#task/i });
-
-	    this.defaultHandler = this.defaultHandler.bind(this);
-	    this.taskStartHandler = this.taskStartHandler.bind(this);
-	    this.taskDescriptionHandler = this.taskDescriptionHandler.bind(this);
     }
 
 	/**
 	 * @param {Session} session
 	 */
-    defaultHandler(session) {}
+    defaultHandler(session) {
+    	console.log('defaultHandler');
+	}
 
 	/**
 	 * @param {Session} session
 	 */
 	taskStartHandler(session) {
-		// console.log(session.message.user.name);
-		console.log(session.message.text);
-		console.log(session.message);
+		const request = this._prepareRequest(session.message.text);
+		const client = this.clients.findAndGetClient(request.name);
 
-		builder.Prompts.text(session, 'Hi! What is your name?');
-	    // session.endDialog("It's %s. YOU WIN!", session.message.text);
+		if (client !== undefined) {
+			session.userData.task = request;
+			session.userData.client = client;
+			builder.Prompts.text(session, 'Set task description');
+		} else {
+			session.endDialog("USER NOT FOUND!");
+		}
     }
 
 	/**
 	 * @param {Session} session
-	 * @param results
+	 * @param {IDialogResult} results
 	 */
 	taskDescriptionHandler(session, results) {
-		console.log('!!!!!!!!!!!!!!!!!!', results);
-		session.endDialogWithResult(results);
+		session.userData.task.description = results.response;
+
+		this.bitrixTaskService
+			.createTask(session.userData.task, session.userData.client)
+			.then(res => {
+				session.send('Created task id - %s', res.result);
+				session.endDialog();
+			})
+			.catch(err => {
+				console.log('err', err);
+				session.endDialog();
+			});
 	}
 
+	/**
+	 * @param {string} str
+	 * @return {{route: string, name: string, taskTitle: string}}
+	 * @private
+	 */
+	_prepareRequest(str) {
+		const res = str.split('#').filter(item => Boolean(item));
+
+		return {
+			route: res[0].trim(),
+			name: res[1].trim() || null,
+			taskTitle: res[2] !== undefined ? res[2].trim() : 'Task from bot:' + this._getTime()
+		};
+	}
+
+	_getTime() {
+		const d = new Date();
+		return `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
+	}
 }
 
 module.exports = BotService;

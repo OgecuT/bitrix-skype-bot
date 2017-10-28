@@ -24,10 +24,14 @@ class ClientService {
 	 * @return ClientEntity
 	 */
 	findAndGetClient(name) {
-		return this.getClients().find((item) => item.nameAlias === name);
+		return this.getClients().find((item) => item.isEqual(name));
     }
 
-    _setClients() {
+	/**
+	 * @return ClientEntity[]
+	 * @private
+	 */
+	_setClients() {
         return users.map(item => new ClientEntity(item));
     }
 }
