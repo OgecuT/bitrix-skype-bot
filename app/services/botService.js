@@ -24,7 +24,8 @@ class BotService {
 	 * @param {Session} session
 	 */
     defaultHandler(session) {
-    	console.log('defaultHandler');
+		session.send('Сашка ты красавчик спору нет!!!');
+		session.endDialog();
 	}
 
 	/**
